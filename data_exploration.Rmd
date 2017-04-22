@@ -1,0 +1,81 @@
+---
+title: "Data Exploration of Tweets"
+author: "Yuki Nagae"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidytext)
+library(dplyr)
+library(stringr)
+library(wordcloud)
+
+library(ggplot2)
+```
+
+## Data Exploration
+
+* how many tweets?
+* frequency of words (maybe too sparse)
+* frequency of O and othter entities
+* term frequency (tf)
+* idf
+* word cloud visualization
+* ggraph (maybe bigrams)
+
+## Data Pre-processing
+
+* lower case (?)
+* remove stop words (?)
+* separated by BOS ~ EOS (different tweets)
+* n-grams (maybe trigrams or 5-grams)
+
+## Some tasks
+
+* noun-phrase chunking
+* POS tagging
+
+## Named Entities
+
+* Person
+* Location
+* Organization
+* more?
+
+## Modeling Techniques
+
+* n-grams
+* n-grams + Word2Vec
+* n-grams + GloVe
+* n-grams + SVM
+* n-grams + KNN
+* Stanford NLP tool (optional)
+
+## References
+
+* [Text Mining with R](http://tidytextmining.com)
+
+## Tasks
+
+```{r}
+path = "./data/"
+train = read.delim(paste0(path, "train.tsv"), header = FALSE, sep = " ")
+```
+
+```{r}
+train_df = data_frame(word = train$V1, type = train$V2)
+```
+
+```{r}
+train_df %>% mutate(tweet = cumsum(str_detect(word, regex("^BOS"))))
+```
+
+```{r}
+train_df %>% count(type) %>% with(wordcloud(type, n, max.words = 100))
+```
+
+```{r}
+train_df %>% count(type, sort=TRUE) %>%
+             mutate(type = reorder(type, n)) %>%
+             ggplot(aes(type, n)) + geom_col() + xlab(NULL) + coord_flip()
+```
