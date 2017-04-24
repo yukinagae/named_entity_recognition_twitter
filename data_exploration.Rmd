@@ -9,11 +9,27 @@ library(tidytext)
 library(dplyr)
 library(stringr)
 library(wordcloud)
-
 library(ggplot2)
 ```
 
 ## Data Exploration
+
+* Identification of types
+    + Attribute
+    + Type
+    + Measured value
+    + Description
+* Identification of summarising properties (histgram, box plot etc)
+    + mode
+    + mean
+    + median
+    + distribution (quartiles?)
+
+* Identification of
+    + missing values
+    + outliers
+    + clusters
+    + interesting attributes
 
 * how many tweets?
 * frequency of words (maybe too sparse)
@@ -22,6 +38,7 @@ library(ggplot2)
 * idf
 * word cloud visualization
 * ggraph (maybe bigrams)
+
 
 ## Data Pre-processing
 
