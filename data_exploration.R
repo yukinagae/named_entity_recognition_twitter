@@ -6,12 +6,14 @@ library(wordcloud)
 library(ggplot2)
 
 path = "./data/"
-
 train = read.delim(paste0(path, "train.tsv"), header = FALSE, sep = " ")
-
 train_df = data_frame(word = train$V1, type = train$V2)
-
 train_df$word <- as.character(train_df$word)
+
+# GloVe
+wv_path = "/Applications/r_workspace/named_entity_recognition_twitter/glove.6B/"
+wv_filename = "glove.6B.50d.txt"
+wv = read.delim(paste0(wv_path, wv_filename), header = FALSE, sep = " ")
 
 # NLP
 # see: https://github.com/statsmaths/coreNLP
@@ -20,7 +22,7 @@ coreNLP::downloadCoreNLP()
 library(coreNLP)
 initCoreNLP()
 
-output = annotateString(train_df$word)
+output = annotateString(train_df$word[1:100])
 getToken(output)[,c(1:3,7:8)]
 
 #
