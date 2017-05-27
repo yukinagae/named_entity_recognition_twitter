@@ -14,17 +14,20 @@ train_filename = "train.tsv"
 
 # word vectors
 wv_filedir = current_file_dir + "/../glove.6B/"
-wv_filename = "glove.6B.50d.txt"
+wv_filename = "glove.twitter.27B.50d.txt"
 
 # output file
 out_filedir = current_file_dir + "/"
-out_filename = "aloha.tsv"
+out_filename = "train_twitter_5_gram.tsv"
 
 # the number of vectors
 vector_for_one_word = 50
 
 # n-gram
-ngram = 1 # TODO can be changed to 1 or 3 or 5
+ngram = 2 # TODO can be changed to 1 or 3 or 5
+# 0 => unigram
+# 1 => trigram
+# 2 => 5-gram
 ######################################################################################
 
 # concatinate file directory and filename, and get filepath
@@ -52,7 +55,7 @@ sentences = []
 with open(train_filepath) as in_f:
     for line in in_f:
         words = line.split()
-        if len(words) == 2: # TODO should be two
+        if len(words) == 2: # should be two
             word = words[0]
             label = words[1]
             sentences.append((word, label))
@@ -72,24 +75,51 @@ while index < len(sentences):
         asis.append(asi)
         index += 1
 
+def get_vectors(d, a, index, ngram = 0):
+
+    if index < 0 or index >= len(a):
+        return zero_list
+
+    before = []
+    after = []
+
+    if ngram > 0:
+        for n in range(1, ngram+1):
+            before = around_vectors(d, a, index - n) + before # TODO
+            after  = after + around_vectors(d, a, index + n)
+
+    word = a[index][0]
+
+    if (word != "BOS" and word != "EOS") and word.lower() in dict:
+        return before + d[word.lower()] + after
+    else:
+        return before + zero_list + after
+
+def around_vectors(d, a, index):
+    if index < 0 or index >= len(a):
+        return zero_list
+
+    word = a[index][0]
+
+    if (word != "BOS" and word != "EOS") and word.lower() in dict:
+        return d[word.lower()]
+    else:
+        return zero_list
+
+
 # read train data
 with open(out_filepath, 'w') as out_f:
     for asi in asis:
-        for a in asi:
+        for i, a in enumerate(asi, start=0):
             word = a[0]
             label = a[1]
-            if (word != "BOS" and word != "EOS") and word.lower() in dict:
-                out_f.write(word)
-                out_f.write(" ")
-                out_f.write(" ".join(dict[word.lower()]))
-                out_f.write(" ")
-                out_f.write(label)
-            else:
-                out_f.write(word)
-                out_f.write(" ")
-                out_f.write(" ".join(zero_list))
-                out_f.write(" ")
-                out_f.write(label)
+            out_f.write(word)
+            out_f.write(" ")
+            #  n-gram
+            vectors = get_vectors(dict, asi, i, ngram)
+            out_f.write(" ".join(vectors))
+            out_f.write(" ")
+            out_f.write(label)
             out_f.write("\n")
 
 # end
