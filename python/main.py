@@ -47,28 +47,50 @@ with open(wv_filepath) as wvs:
 
 zero_list = ["0"] * vector_for_one_word
 
+sentences = []
+
+with open(train_filepath) as in_f:
+    for line in in_f:
+        words = line.split()
+        if len(words) == 2: # TODO should be two
+            word = words[0]
+            label = words[1]
+            sentences.append((word, label))
+
+# print sentences
+
+asis = []
+
+index = 0
+while index < len(sentences):
+    if sentences[index][0] == "BOS":
+        asi = []
+        while sentences[index][0] != "EOS":
+            asi.append(sentences[index])
+            index += 1
+        asi.append(sentences[index])
+        asis.append(asi)
+        index += 1
+
 # read train data
 with open(out_filepath, 'w') as out_f:
-    with open(train_filepath) as in_f:
-        for line in in_f:
-            words = line.split()
-            if len(words) == 2: # TODO should be two
-                word = words[0]
-                label = words[1]
-                if (word != "BOS" and word != "EOS") and word.lower() in dict:
-                    out_f.write(word)
-                    out_f.write(" ")
-                    out_f.write(" ".join(dict[word.lower()]))
-                    out_f.write(" ")
-                    out_f.write(label)
-                else:
-                    out_f.write(word)
-                    out_f.write(" ")
-                    out_f.write(" ".join(zero_list))
-                    out_f.write(" ")
-                    out_f.write(label)
-                out_f.write("\n")
-
+    for asi in asis:
+        for a in asi:
+            word = a[0]
+            label = a[1]
+            if (word != "BOS" and word != "EOS") and word.lower() in dict:
+                out_f.write(word)
+                out_f.write(" ")
+                out_f.write(" ".join(dict[word.lower()]))
+                out_f.write(" ")
+                out_f.write(label)
+            else:
+                out_f.write(word)
+                out_f.write(" ")
+                out_f.write(" ".join(zero_list))
+                out_f.write(" ")
+                out_f.write(label)
+            out_f.write("\n")
 
 # end
 print ("[finish] " + unicode(datetime.datetime.now()))
