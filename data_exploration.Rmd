@@ -89,8 +89,6 @@ train_df %>% count(word, sort=TRUE) %>%
 
 ## Named Entities
 
-<font color="red">TODO we need to define our entities since below are different from the dataset such as B-tvshow => TV show. We can ignore B-tvshow actually.</font>
-
 * Person
 	+ B-person
 	+ I-person
@@ -105,13 +103,10 @@ train_df %>% count(word, sort=TRUE) %>%
 
 ## Modeling Techniques
 
-<font color="red">TODO build classifiers</font>
-
-* n-grams + Word2Vec
-* n-grams + GloVe
-* n-grams + SVM
-* n-grams + KNN
-* Stanford NLP tool (optional)
+* n-grams
+* GloVe
+* SVM
+* KNN
 
 ### GloVe + SVM + unigram
 
