@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+glove.6B
+python/*.tsv

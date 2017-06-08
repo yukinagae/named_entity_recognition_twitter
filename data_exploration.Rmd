@@ -151,6 +151,7 @@ library(caret)
 split data into `train` and `test`
 
 ```{r}
+train$V1 <- NULL
 train_ids <- sample(nrow(train), nrow(train)*0.7)
 svm.train <- train[train_ids,] # 70%
 svm.test <- train[-train_ids,] # 30%
@@ -159,21 +160,35 @@ svm.test <- train[-train_ids,] # 30%
 SVM model
 
 ```{r}
-svm_model <- svm(V52 ~ V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+V13+V14+V15+V16+V17+V18+V19+V20+V21+V22+V23+V24+V25+V26+V27+V28+V29+V30+V31+V32+V33+V34+V35+V36+V37+V38+V39+V40+V41+V42+V43+V44+V45+V46+V47+V48+V49+V50+V51, data=svm.train)
+svm_model <- svm(V252 ~ ., data=svm.train)
 svm.predict <- predict(svm_model, svm.test)
+```
+
+```{r}
+#tr <- train[train_ids,] # 70%
+#te <- train[-train_ids,] # 30%
+
+#control <- trainControl(method="cv", number=10)
+#metric <- "Accuracy"
+
+#set.seed(7)
+#fit.knn <- train(V52 ~ ., data=tr, method="knn", metric=metric, trControl=control)
+
+#lda.predict <- predict(fit.lda, te)
+
 ```
 
 confusion matrix
 
 ```{r}
-confusionMatrix(svm.predict, svm.test$V52)
+#confusionMatrix(svm.predict, svm.test$V52)
+#confusionMatrix(svm.predict, svm.test$V52)
 ```
 
 write results to a file
 
 ```{r}
-write.table(paste(svm.test$V52, svm.predict, sep = "\t"), file = "glove.svm.results", quote = FALSE, row.names = FALSE, col.names = FALSE)
-
+write.table(paste(svm.test$V252, svm.predict, sep = "\t"), file = "glove.twitter.5gram.svm.results", quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
 
 ## Evaluation
@@ -185,7 +200,7 @@ write.table(paste(svm.test$V52, svm.predict, sep = "\t"), file = "glove.svm.resu
 * [CoNLL](http://www.cnts.ua.ac.be/conll2002/ner/) - conlleval.pl
 
 ```{sh}
-cat glove.svm.results | tr '\t' ' ' | perl -ne '{chomp;s/\r//g;print $_,"\n";}' | perl connlleval.pl
+#cat glove.svm.results | tr '\t' ' ' | perl -ne '{chomp;s/\r//g;print $_,"\n";}' | perl connlleval.pl
 ```
 
 ## References
