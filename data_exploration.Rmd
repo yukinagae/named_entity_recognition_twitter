@@ -34,7 +34,7 @@ train_df <- train_df %>% mutate(tweet = cumsum(str_detect(word, regex("^BOS"))))
 |:-----------|:---------|:-----------------------------|:----------------------|
 | word       | nominal  | BOS, @foo, they, will, be, all, done, by, Sunday, EOS | tokenized words and special words (BOS = beginning of sentence, EOS = end of sentence)
 | NER type   | nominal  | O (other), B-person, I-person, B-geo-loc, I-geo-loc, B-other, I-other, B-company, I-company, B-facility, I-facility, B-product, I-product, B-musicartist, I-musicartist, B-sportsteam, I-sportsman, B-tvshow, I-tvshow, B-moview, I-movie, OBOS | named entities
-    
+
 
 ### Identification of summarising properties (histgram, box plot etc)
 
@@ -87,32 +87,6 @@ train_df %>% count(word, sort=TRUE) %>%
              ggplot(aes(word, n)) + geom_col() + coord_flip()
 ```
 
-### (Optional) Identification of
-
-<font color="red">TODO optional</font>
-
-* missing values
-* outliers
-* clusters
-* interesting attributes
-
-
-## Data Pre-processing
-
-<font color="red">TODO</font>
-
-* lower case (?)
-* remove stop words (?)
-* separated by BOS ~ EOS (different tweets)
-* n-grams (unigram, trigrams and 5-grams)
-
-## Some tasks
-
-<font color="red">TODO maybe not necessary</font>
-
-* noun-phrase chunking
-* POS tagging
-
 ## Named Entities
 
 <font color="red">TODO we need to define our entities since below are different from the dataset such as B-tvshow => TV show. We can ignore B-tvshow actually.</font>
@@ -164,25 +138,11 @@ svm_model <- svm(V252 ~ ., data=svm.train)
 svm.predict <- predict(svm_model, svm.test)
 ```
 
-```{r}
-#tr <- train[train_ids,] # 70%
-#te <- train[-train_ids,] # 30%
-
-#control <- trainControl(method="cv", number=10)
-#metric <- "Accuracy"
-
-#set.seed(7)
-#fit.knn <- train(V52 ~ ., data=tr, method="knn", metric=metric, trControl=control)
-
-#lda.predict <- predict(fit.lda, te)
-
-```
-
 confusion matrix
 
 ```{r}
-#confusionMatrix(svm.predict, svm.test$V52)
-#confusionMatrix(svm.predict, svm.test$V52)
+confusionMatrix(svm.predict, svm.test$V52)
+confusionMatrix(svm.predict, svm.test$V52)
 ```
 
 write results to a file
@@ -192,10 +152,6 @@ write.table(paste(svm.test$V252, svm.predict, sep = "\t"), file = "glove.twitter
 ```
 
 ## Evaluation
-
-* [MUC-7](http://www-nlpir.nist.gov/related_projects/muc/)
-
-<font color="red">TODO may need evaluation scripts.</font>
 
 * [CoNLL](http://www.cnts.ua.ac.be/conll2002/ner/) - conlleval.pl
 
